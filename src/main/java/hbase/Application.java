@@ -23,7 +23,7 @@ public class Application {
 	}
 
 	@Bean
-	public Connection connectAdmin() throws IOException {
+	public Connection connect() throws IOException {
 		Configuration conf = HBaseConfiguration.create();
 		conf.set("hbase.zookeeper.property.clientPort", "2181");
 		conf.set("hbase.zookeeper.quorum", "127.0.0.1");

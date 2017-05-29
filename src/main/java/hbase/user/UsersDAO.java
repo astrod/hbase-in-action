@@ -1,5 +1,7 @@
 package hbase.user;
 
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -17,6 +19,7 @@ import java.io.IOException;
 @Service
 public class UsersDAO {
 	public static final byte[] TABLE_NAME = Bytes.toBytes("users");
+	public static final byte[] TWIT_TABLE_NAME = Bytes.toBytes("twit");
 	public static final byte[] INFO_FAM = Bytes.toBytes("info");
 	public static final byte[] USER_COL = Bytes.toBytes("user");
 	public static final byte[] NAME_COL = Bytes.toBytes("name");
@@ -79,9 +82,30 @@ public class UsersDAO {
 		table.close();
 	}
 
-	public String getTableName() throws IOException {
-		Table table = connection.getTable(TableName.valueOf(TABLE_NAME));
-		return table.getName().getNameAsString();
+	public String getTableNames() throws IOException {
+		Admin admin = connection.getAdmin();
+		TableName [] tableNames = admin.listTableNames();
+		String result = "";
+		for(int i = 0; i<tableNames.length; i++) {
+			result += tableNames[i].getNameAsString();
+			result += " and ";
+		}
+		return result;
+	}
+
+	public boolean createTwitTable() throws IOException {
+		Admin admin = connection.getAdmin();
+		HTableDescriptor desc = makeTableDescriptor();
+		admin.createTable(desc);
+		return true;
+	}
+
+	private HTableDescriptor makeTableDescriptor() {
+		HTableDescriptor desc = new HTableDescriptor(TableName.valueOf(TWIT_TABLE_NAME));
+		HColumnDescriptor colDesc = new HColumnDescriptor(Bytes.toBytes("info2"));
+		colDesc.setMaxVersions(1);
+		desc.addFamily(colDesc);
+		return desc;
 	}
 
 	private static class User extends hbase.user.User {

@@ -30,10 +30,20 @@ public class UserController {
 		return "success add";
 	}
 
-	@RequestMapping("/users")
+	@RequestMapping("/users/tables")
 	@ResponseBody
 	public String table() throws IOException {
-		return dao.getTableName() + " is table Name";
+		return dao.getTableNames();
+	}
+
+	@RequestMapping("/users/create/table")
+	@ResponseBody
+	public String createTable() throws IOException {
+		if(dao.createTwitTable()) {
+			return "success create table";
+		}
+
+		return "fail create table";
 	}
 
 	@Autowired
