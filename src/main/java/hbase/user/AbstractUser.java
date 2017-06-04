@@ -1,22 +1,21 @@
 package hbase.user;
 
-import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
-
 /**
- * User
+ * AbstractUser
  *
  * @author jongUn
  * @since 2017. 05. 28.
  */
-public abstract class User {
+public abstract class AbstractUser {
 	public String user;
 	public String name;
 	public String email;
 	public String password;
+	public long tweetCount;
 
 	@Override
 	public String toString() {
-		return String.format("<User: %s, %s, %s>",user, name, email);
+		return String.format("<AbstractUser: %s, %s, %s>",user, name, email);
 	}
 
 }
